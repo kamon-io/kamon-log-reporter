@@ -18,7 +18,7 @@ import Settings._
 import Dependencies._
 
 lazy val root = (project in file("."))
-  .settings(name := "kamon-system-metrics")
+  .settings(name := "kamon-log-reporter")
   .settings(basicSettings: _*)
   .settings(formatSettings: _*)
   .settings(
