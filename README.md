@@ -2,7 +2,7 @@ Log Reporter   ![Build Status](https://travis-ci.org/kamon-io/kamon-log-reporter
 ==========================
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/kamon-io/Kamon?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.kamon/kamon-log-reporter_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.kamon/kamon-log-reporter.11)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.kamon/kamon-log-reporter_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.kamon/kamon-log-reporter_2.11)
 
 
 The `kamon-log-reporter` module is a very simple metrics reporter that subscribes to certain supported categories and
