@@ -12,7 +12,7 @@ This module is not meant to be used in <b>production environments</b>, but it ce
 
 ### Getting Started
 
-Kamon scala module is currently available for Scala 2.10, 2.11 and 2.12.
+Kamon log-reporter module is currently available for Scala 2.10, 2.11 and 2.12.
 
 Supported releases and dependencies are shown below.
 
