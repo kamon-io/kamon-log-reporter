@@ -2,24 +2,33 @@ Log Reporter   ![Build Status](https://travis-ci.org/kamon-io/kamon-log-reporter
 ==========================
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/kamon-io/Kamon?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.kamon/kamon-log-reporter_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.kamon/kamon-log-reporter.11)
 
-***kamon-log-reporter*** [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.kamon/kamon-log-reporter_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.kamon/kamon-log-reporter.11)
-
-Using the LogReporter
-=====================
 
 The `kamon-log-reporter` module is a very simple metrics reporter that subscribes to certain supported categories and
 dumps the available data in table-like format on every tick.
 
 This module is not meant to be used in <b>production environments</b>, but it certainly is a convenient way to test Kamon without having to install a full-fledged metrics backend for development purposes.
 
+### Getting Started
 
-Installation
-------------
+Kamon scala module is currently available for Scala 2.10, 2.11 and 2.12.
 
+Supported releases and dependencies are shown below.
+
+| kamon-log-reporter  | status | jdk  | scala            | akka   |
+|:------:|:------:|:----:|------------------|:------:|
+|  0.6.5 | stable | 1.7+, 1.8+ | 2.10, 2.11, 2.12  | 2.3.x, 2.4.x |
+
+To get started with SBT, simply add the following to your `build.sbt`
+file:
+
+
+```scala
+libraryDependencies += "kamon.io" %% "kamon-log-reporter" % "0.6.5"
+```
 Add the `kamon-log-reporter` dependency to your project and ensure that it is in your classpath at runtime, that's it.
 Kamon's module loader will detect that the log reporter is in the classpath and automatically start it.
-
 
 Reported Metrics
 ----------------

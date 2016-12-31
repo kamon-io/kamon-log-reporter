@@ -13,6 +13,7 @@
  * =========================================================================================
  */
 
+import sbt.Keys.scalaBinaryVersion
 import sbt._
 
 object Dependencies {
@@ -22,19 +23,25 @@ object Dependencies {
     "Kamon Repository Snapshots" at "http://snapshots.kamon.io"
   )
 
-  val kamonVersion      = "0.6.3"
-  val akkaVersion       = "2.3.14"
+  val kamonVersion      = "0.6.5"
+  val akkaVersion210    = "2.3.16"
+  val akkaVersion212    = "2.4.16"
   val slf4jVersion      = "1.7.7"
 
   val kamonCore         = "io.kamon"                  %%  "kamon-core"            % kamonVersion
   val kamonTestkit      = "io.kamon"                  %%  "kamon-testkit"         % kamonVersion
 
-  val akkaSlf4j         = "com.typesafe.akka"         %%  "akka-slf4j"            % akkaVersion
-  val akkaTestKit       = "com.typesafe.akka"         %%  "akka-testkit"          % akkaVersion
-
-  val scalatest         = "org.scalatest"             %%  "scalatest"             % "2.2.4"
+  val scalatest         = "org.scalatest"             %%  "scalatest"             % "3.0.1"
   val slf4jApi          = "org.slf4j"                 %   "slf4j-api"             % slf4jVersion
   val logback           = "ch.qos.logback"            %   "logback-classic"       % "1.0.13"
+
+
+  def akkaDependency(moduleName: String) = Def.setting {
+    scalaBinaryVersion.value match {
+      case "2.10" | "2.11"  => "com.typesafe.akka" %% s"akka-$moduleName" % akkaVersion210
+      case "2.12"           => "com.typesafe.akka" %% s"akka-$moduleName" % akkaVersion212
+    }
+  }
 
   def compileScope   (deps: ModuleID*): Seq[ModuleID] = deps map (_ % "compile")
   def testScope      (deps: ModuleID*): Seq[ModuleID] = deps map (_ % "test")

@@ -13,28 +13,27 @@
  * =========================================================================================
  */
 
-import sbt.Tests.{SubProcess, Group}
-import sbt._
-import Keys._
-import com.typesafe.sbt.SbtScalariform
-import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 import Publish.{settings => publishSettings}
 import Release.{settings => releaseSettings}
+import com.typesafe.sbt.SbtScalariform
+import com.typesafe.sbt.SbtScalariform.ScalariformKeys
+import sbt.Keys._
+import sbt._
+
 import scalariform.formatter.preferences._
 
 object Settings {
 
   val JavaVersion = "1.6"
-  val SVersion = "2.11.8"
+  val SVersion = "2.12.1"
 
   lazy val basicSettings = Seq(
     ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) },
     scalaVersion                    := SVersion,
-    crossScalaVersions              := Seq("2.10.5", SVersion, "2.12.0"),
+    crossScalaVersions              := Seq("2.10.5", "2.11.8", SVersion),
     resolvers                       ++= Dependencies.resolutionRepos,
     fork in run                     := true,
     parallelExecution in Global     := false,
-    testGrouping in Test            := singleTestPerJvm((definedTests in Test).value, (javaOptions in Test).value),
     javacOptions                    := Seq(
       "-Xlint:-options",
       "-source", JavaVersion, "-target", JavaVersion),
@@ -44,23 +43,12 @@ object Settings {
       "-g:vars",
       "-feature",
       "-unchecked",
-      "-optimise",
       "-deprecation",
-      "-target:jvm-1.6",
       "-language:postfixOps",
       "-language:implicitConversions",
-      "-Yinline-warnings",
       "-Xlog-reflective-calls"
     )) ++ publishSettings ++ releaseSettings
 
-
-  def singleTestPerJvm(tests: Seq[TestDefinition], jvmSettings: Seq[String]): Seq[Group] =
-    tests map { test =>
-       Group(
-        name = test.name,
-        tests = Seq(test),
-        runPolicy = SubProcess(ForkOptions(runJVMOptions = jvmSettings)))
-    }
 
   lazy val formatSettings = SbtScalariform.scalariformSettings ++ Seq(
     ScalariformKeys.preferences in Compile := formattingPreferences,
