@@ -25,7 +25,7 @@ file:
 
 
 ```scala
-libraryDependencies += "kamon.io" %% "kamon-log-reporter" % "0.6.5"
+libraryDependencies += "io.kamon" %% "kamon-log-reporter" % "0.6.5"
 ```
 Add the `kamon-log-reporter` dependency to your project and ensure that it is in your classpath at runtime, that's it.
 Kamon's module loader will detect that the log reporter is in the classpath and automatically start it.
