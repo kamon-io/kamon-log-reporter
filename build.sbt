@@ -14,14 +14,11 @@
  */
 
 
-import Settings._
-import Dependencies._
+val kamonCore  = "io.kamon" %% "kamon-core" % "0.6.6"
 
 lazy val root = (project in file("."))
   .settings(name := "kamon-log-reporter")
-  .settings(basicSettings: _*)
-  .settings(formatSettings: _*)
   .settings(
         libraryDependencies ++=
           compileScope(kamonCore) ++
-          testScope(scalatest, akkaDependency("testkit").value, slf4jApi, logback))
+          testScope(scalatest, akkaDependency("testkit").value, slf4jApi, logbackClassic))
