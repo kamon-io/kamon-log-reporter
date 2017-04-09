@@ -44,6 +44,7 @@ class LogReporterExtension(system: ExtendedActorSystem) extends Kamon.Extension 
   Kamon.metrics.subscribe("gauge", "**", subscriber, permanently = true)
   Kamon.metrics.subscribe("system-metric", "**", subscriber, permanently = true)
   Kamon.metrics.subscribe("executor-service", "**", subscriber, permanently = true)
+  Kamon.metrics.subscribe("jdbc-statement", "**", subscriber, permanently = true)
 }
 
 class LogReporterSubscriber extends Actor with ActorLogging {
@@ -72,6 +73,7 @@ class LogReporterSubscriber extends Actor with ActorLogging {
       case (entity, snapshot) if entity.category == "min-max-counter"  ⇒ minMaxCounters += (entity.name -> snapshot.minMaxCounter("min-max-counter"))
       case (entity, snapshot) if entity.category == "gauge"            ⇒ gauges += (entity.name -> snapshot.gauge("gauge"))
       case (entity, snapshot) if entity.category == "system-metric"    ⇒ logSystemMetrics(entity.name, snapshot)
+      case (entity, snapshot) if entity.category == "jdbc-statement"   ⇒ logJdbcMetrics(snapshot)
       case ignoreEverythingElse                                        ⇒
     }
 
@@ -478,6 +480,43 @@ class LogReporterSubscriber extends Actor with ActorLogging {
   def histogramView(histogram: Histogram.Snapshot): String =
     "|          Min: %-12s           Average: %-12s                Max: %-12s      |"
       .format(histogram.min, histogram.average, histogram.max)
+
+  def logJdbcMetrics(jdbcSnapshot: EntitySnapshot): Unit = {
+
+    val histograms =
+      Map(
+        "updates" -> jdbcSnapshot.histogram("updates"),
+        "queries" -> jdbcSnapshot.histogram("queries"),
+        "batches" -> jdbcSnapshot.histogram("batches"),
+        "generic-execute" -> jdbcSnapshot.histogram("generic-execute")
+      )
+
+    val metricsData = StringBuilder.newBuilder
+
+    metricsData.append(
+      """
+        |+--------------------------------------------------------------------------------------------------+
+        ||                                                                                                  |
+        ||                                           JDBC                                                   |
+        ||                                       -------------                                              |
+        |""".stripMargin)
+
+    histograms.foreach {
+      case (name, snapshot) ⇒
+        metricsData.append("|  %-40s                                                        |\n".format(name))
+        metricsData.append("|  Requests: %-40s                                              |\n".format(snapshot.get.numberOfMeasurements))
+        metricsData.append(compactHistogramView(snapshot.get))
+        metricsData.append("\n|                                                                                                  |\n")
+    }
+
+    metricsData.append(
+      """||                                                                                                  |
+         |+--------------------------------------------------------------------------------------------------+"""
+        .stripMargin)
+
+    log.info(metricsData.toString())
+
+  }
 }
 
 object LogReporterSubscriber {
