@@ -4,13 +4,13 @@ Contributing to Kamon
 Thanks for your intention on collaborating to the Kamon Project! It doesn't matter if you want to provide a small change
 to our docs, are lost in configuration or want contribute a brand new feature, we value all of your contributions and
 the time you take to use our tool and prepare a contribution, we only ask you to follow this guidance depending on your
-situation: 
+situation:
 
 If you are experiencing a bug
 -----------------------------
 
 If you see weird exceptions in your log or something definitely is working improperly please [open an issue] and include
-the Kamon, Akka and Spray/Play! versions that you are using along with as many useful information you can find related 
+the Kamon, Akka and Spray/Play! versions that you are using along with as many useful information you can find related
 to the issue. If you can provide a gist or a short way to reproduce the issue we will be more than happy!
 
 If you don't know what is wrong

@@ -1,5 +1,5 @@
 /* =========================================================================================
- * Copyright © 2013-2016 the kamon project <http://kamon.io/>
+ * Copyright © 2013-2017 the kamon project <http://kamon.io/>
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -14,7 +14,7 @@
  */
 
 
-val kamonCore  = "io.kamon" %% "kamon-core" % "0.6.6"
+val kamonCore  = "io.kamon" %% "kamon-core" % "0.6.7"
 
 lazy val root = (project in file("."))
   .settings(name := "kamon-log-reporter")
