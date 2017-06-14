@@ -18,14 +18,14 @@ Supported releases and dependencies are shown below.
 
 | kamon-log-reporter  | status | jdk  | scala            | akka   |
 |:------:|:------:|:----:|------------------|:------:|
-|  0.6.7 | stable | 1.7+, 1.8+ | 2.10, 2.11, 2.12  | 2.3.x, 2.4.x |
+|  0.6.8 | stable | 1.7+, 1.8+ | 2.10, 2.11, 2.12  | 2.3.x, 2.4.x |
 
 To get started with SBT, simply add the following to your `build.sbt`
 file:
 
 
 ```scala
-libraryDependencies += "io.kamon" %% "kamon-log-reporter" % "0.6.7"
+libraryDependencies += "io.kamon" %% "kamon-log-reporter" % "0.6.8"
 ```
 Add the `kamon-log-reporter` dependency to your project and ensure that it is in your classpath at runtime, that's it.
 Kamon's module loader will detect that the log reporter is in the classpath and automatically start it.
