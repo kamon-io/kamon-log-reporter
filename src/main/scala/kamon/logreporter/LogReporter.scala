@@ -36,6 +36,7 @@ class LogReporterExtension(system: ExtendedActorSystem) extends Kamon.Extension 
 
   Kamon.metrics.subscribe("trace", "**", subscriber, permanently = true)
   Kamon.metrics.subscribe("akka-actor", "**", subscriber, permanently = true)
+  Kamon.metrics.subscribe("akka-actor-group", "**", subscriber, permanently = true)
   Kamon.metrics.subscribe("akka-router", "**", subscriber, permanently = true)
   Kamon.metrics.subscribe("akka-dispatcher", "**", subscriber, permanently = true)
   Kamon.metrics.subscribe("counter", "**", subscriber, permanently = true)
@@ -64,6 +65,7 @@ class LogReporterSubscriber extends Actor with ActorLogging {
 
     tick.metrics foreach {
       case (entity, snapshot) if entity.category == "akka-actor"       ⇒ logActorMetrics(entity.name, snapshot)
+      case (entity, snapshot) if entity.category == "akka-actor-group" ⇒ logActorGroupMetrics(entity.name, snapshot)
       case (entity, snapshot) if entity.category == "akka-router"      ⇒ logRouterMetrics(entity.name, snapshot)
       case (entity, snapshot) if entity.category == "akka-dispatcher"  ⇒ logDispatcherMetrics(entity, snapshot)
       case (entity, snapshot) if entity.category == "executor-service" ⇒ logExecutorMetrics(entity, snapshot)
@@ -112,6 +114,46 @@ class LogReporterSubscriber extends Actor with ActorLogging {
             processingTime.percentile(50.0D), timeInMailbox.percentile(50.0D), mailboxSize.max,
             processingTime.percentile(90.0D), timeInMailbox.percentile(90.0D),
             processingTime.percentile(95.0D), timeInMailbox.percentile(95.0D),
+            processingTime.percentile(99.0D), timeInMailbox.percentile(99.0D), errors.count,
+            processingTime.percentile(99.9D), timeInMailbox.percentile(99.9D),
+            processingTime.max, timeInMailbox.max))
+    }
+
+  }
+
+  def logActorGroupMetrics(name: String, metricSnapshot: EntitySnapshot): Unit = {
+    for {
+      processingTime ← metricSnapshot.histogram("processing-time")
+      timeInMailbox ← metricSnapshot.histogram("time-in-mailbox")
+      mailboxSize ← metricSnapshot.minMaxCounter("mailbox-size")
+      actors ← metricSnapshot.minMaxCounter("actors")
+      errors ← metricSnapshot.counter("errors")
+    } {
+
+      log.info(
+        """
+        |+--------------------------------------------------------------------------------------------------+
+        ||                                                                                                  |
+        ||    Actor Group: %-77s    |
+        ||                                                                                                  |
+        ||   Processing Time (nanoseconds)      Time in Mailbox (nanoseconds)         Mailbox Size          |
+        ||    Msg Count: %-12s               Msg Count: %-12s             Min: %-8s       |
+        ||          Min: %-12s                     Min: %-12s            Avg.: %-8s       |
+        ||    50th Perc: %-12s               50th Perc: %-12s             Max: %-8s       |
+        ||    90th Perc: %-12s               90th Perc: %-12s                                 |
+        ||    95th Perc: %-12s               95th Perc: %-12s             Actor Max: %-6s   |
+        ||    99th Perc: %-12s               99th Perc: %-12s           Error Count: %-6s   |
+        ||  99.9th Perc: %-12s             99.9th Perc: %-12s                                 |
+        ||          Max: %-12s                     Max: %-12s                                 |
+        ||                                                                                                  |
+        |+--------------------------------------------------------------------------------------------------+"""
+          .stripMargin.format(
+            name,
+            processingTime.numberOfMeasurements, timeInMailbox.numberOfMeasurements, mailboxSize.min,
+            processingTime.min, timeInMailbox.min, mailboxSize.average,
+            processingTime.percentile(50.0D), timeInMailbox.percentile(50.0D), mailboxSize.max,
+            processingTime.percentile(90.0D), timeInMailbox.percentile(90.0D),
+            processingTime.percentile(95.0D), timeInMailbox.percentile(95.0D), actors.max,
             processingTime.percentile(99.0D), timeInMailbox.percentile(99.0D), errors.count,
             processingTime.percentile(99.9D), timeInMailbox.percentile(99.9D),
             processingTime.max, timeInMailbox.max))
